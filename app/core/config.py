@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     debug: bool = False
     default_currency: str = "THB"
     currency_symbol: str = "฿"
+    app_timezone: str = "Asia/Bangkok"
 
     # Database (Supabase PostgreSQL) - required, no default on purpose
     database_url: str

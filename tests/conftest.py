@@ -63,3 +63,19 @@ def auth_headers(client):
 @pytest.fixture()
 def other_headers(client):
     return register_and_login(client, "malee")
+
+
+
+# ---- added in Step 6: freeze "today" so date-dependent tests are repeatable ----
+from datetime import date  # noqa: E402
+
+from app.core.clock import get_today  # noqa: E402
+
+TODAY = date(2026, 11, 11)  # a Wednesday
+
+
+@pytest.fixture()
+def fixed_today(client):
+    """Request this fixture in any test that relies on the default date."""
+    app.dependency_overrides[get_today] = lambda: TODAY
+    return TODAY

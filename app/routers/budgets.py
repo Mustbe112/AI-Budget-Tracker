@@ -1,9 +1,15 @@
-from fastapi import APIRouter, Response, status
+from datetime import date
+from typing import Annotated
 
+from fastapi import APIRouter, Query, Response, status
+
+from app.core.clock import Today
 from app.core.dependencies import CurrentUser, DbSession
 from app.database.enums import BudgetPeriod, Category
 from app.schemas.budget import BudgetCreate, BudgetRead, BudgetUpdate
-from app.services import budget_service
+from app.schemas.budget_check import BudgetCheckResponse
+from app.services import budget_check_service, budget_service
+from app.services.notification_service import build_alerts
 
 router = APIRouter(prefix="/budgets", tags=["budgets"])
 
@@ -27,8 +33,20 @@ def list_budgets(
     )
 
 
-# NOTE: GET /budgets/check is added in Step 6. It must be declared BEFORE any
-# GET /budgets/{id} route, or FastAPI would treat "check" as an id.
+# Declared BEFORE any /budgets/{id} route so "check" is never read as an id.
+@router.get("/check", response_model=BudgetCheckResponse)
+def check_budgets(
+    db: DbSession,
+    user: CurrentUser,
+    today: Today,
+    reference_date: Annotated[
+        date | None, Query(alias="date", description="Default: today (Asia/Bangkok)")
+    ] = None,
+):
+    """Spent / remaining / status for every budget active on the given date."""
+    ref = reference_date or today
+    items = budget_check_service.check_budgets(db, user.id, ref)
+    return BudgetCheckResponse(reference_date=ref, items=items, alerts=build_alerts(items))
 
 
 @router.put("/{budget_id}", response_model=BudgetRead)
