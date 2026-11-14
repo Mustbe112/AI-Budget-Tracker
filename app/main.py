@@ -1,6 +1,7 @@
 """FastAPI application entry point. Wiring only; no business logic here."""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import receipts
 from app.routers import ai
 from app.core.config import settings
 from app.core.exceptions import register_exception_handlers
@@ -23,7 +24,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     register_exception_handlers(app)
-
+    app.include_router(receipts.router)
     app.include_router(auth.router)
     app.include_router(ai.router)
     app.include_router(expenses.router)
