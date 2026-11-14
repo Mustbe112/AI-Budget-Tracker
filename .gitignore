@@ -1,0 +1,33 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+uploads/*
+!uploads/.gitkeep
+.DS_Store
+**/.DS_Store
+
+# ---- Added: more secrets protection ----
+.env.*
+!.env.example
+
+# ---- Added: caches and build output ----
+*.egg-info/
+htmlcov/
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+
+# ---- Added: local databases and logs ----
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# ---- Added: editors / OS ----
+.idea/
+.vscode/
+Thumbs.db
+ uploads/
