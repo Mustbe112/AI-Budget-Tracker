@@ -644,4 +644,4 @@ Integration contracts:
 
 ## License
 
-Add a license before making the repository public (for example, MIT).
+University Project
