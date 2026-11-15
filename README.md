@@ -44,12 +44,7 @@ Design rules that apply everywhere:
 
 ## System architecture
 
-Each diagram is a PNG image in `docs/images/`, so it displays in any viewer. The Mermaid source is included under each image for easy editing.
-
-![System architecture](docs/images/architecture.png)
-
-<details>
-<summary>Editable Mermaid source</summary>
+The diagrams below are written in Mermaid inside this file. GitHub draws them automatically, so no image files are needed.
 
 ```mermaid
 flowchart LR
@@ -77,8 +72,6 @@ flowchart LR
     SV -.->|"verified data only"| LLM
 ```
 
-</details>
-
 | Layer | Responsibility |
 |---|---|
 | React frontend | User interface; talks to the backend over REST and JSON |
@@ -92,11 +85,6 @@ flowchart LR
 Dependency direction is one-way: `routers -> services -> algorithms / database`. Algorithms never import the database or the web framework, which keeps them easy to test.
 
 ## Workflow
-
-![User workflow](docs/images/workflow.png)
-
-<details>
-<summary>Editable Mermaid source</summary>
 
 ```mermaid
 flowchart TD
@@ -115,8 +103,6 @@ flowchart TD
     K --> L["AI recommendations<br/>POST /ai/recommendations"]
 ```
 
-</details>
-
 1. The user registers or logs in and receives a JWT.
 2. An expense is added manually, or through the receipt flow: upload, OCR extract, user review, confirm.
 3. The saved expense is checked against the user's budgets.
@@ -125,11 +111,6 @@ flowchart TD
 6. AI recommendations are generated from the verified analysis results.
 
 ## Database design
-
-![Entity relationship diagram](docs/images/erd.png)
-
-<details>
-<summary>Editable Mermaid source</summary>
 
 ```mermaid
 erDiagram
@@ -181,19 +162,12 @@ erDiagram
     }
 ```
 
-</details>
-
 - Every table links to `users` through `user_id`, and every query filters by the authenticated user.
 - Money columns use `NUMERIC(12, 2)`.
 - Planned constraints: amounts must be greater than zero, budget period must be `daily`, `weekly`, or `monthly`, and `end_date` must not be before `start_date`.
 - Schema changes go through Alembic migrations, never manual edits.
 
 ## AI recommendation flow
-
-![AI recommendation flow](docs/images/ai_flow.png)
-
-<details>
-<summary>Editable Mermaid source</summary>
 
 ```mermaid
 flowchart LR
@@ -205,8 +179,6 @@ flowchart LR
     LLM --> ANS(["Explanation and<br/>saving tips"])
     LLM -.->|"error or timeout"| FB["Return calculated results only"]
 ```
-
-</details>
 
 1. The endpoint loads only the signed-in user's records.
 2. Python algorithms produce verified numbers (totals, overage, trends).
@@ -293,7 +265,6 @@ backend/
 │       ├── test_budgets.py
 │       └── test_algorithms.py
 ├── alembic/                     # Migration scripts
-├── docs/images/                 # Diagram images used in this README
 ├── requirements.txt
 ├── requirements-optional.txt
 ├── .env.example
