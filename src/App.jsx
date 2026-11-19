@@ -49,6 +49,8 @@ const NAV = [
   ['receipts', 'Scan receipt'], ['reports', 'Reports'], ['analysis', 'Analysis'], ['assistant', 'Assistant'],
 ];
 
+const pageLabel = (id) => NAV.find(([key]) => key === id)?.[1] || 'Profile';
+
 export default function App() {
   const [authed, setAuthed] = useState(!!token.get());
   const [page, setPage] = useState('dashboard');
@@ -80,15 +82,39 @@ export default function App() {
 
   return (
     <div className="shell">
-      <nav className="side">
-        <div className="brand">Budget<br />Tracker</div>
-        {NAV.map(([id, label]) => (
-          <button key={id} className={page === id ? 'nav on' : 'nav'} onClick={() => setPage(id)}>{label}</button>
-        ))}
-        <button className={page === 'profile' ? 'nav out on' : 'nav out'} onClick={() => setPage('profile')}>Profile{token.user() ? ` (${token.user()})` : ''}</button>
-        <button className="nav" onClick={signOut}>Sign out</button>
-      </nav>
-      <main className="main" key={page}>{views[page]}</main>
+      <aside className="side">
+        <a className="brand brand-lockup" href="#" onClick={(e) => { e.preventDefault(); setPage('dashboard'); }}>
+          <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
+          <span className="brand-type"><span>good<span className="brand-dot">.</span>budget</span><small>YOUR FINANCES, CLEARER</small></span>
+        </a>
+        <p className="side-label">YOUR MONEY</p>
+        <nav className="side-nav" aria-label="Main navigation">
+          {NAV.map(([id, label], index) => (
+            <button key={id} className={page === id ? 'nav on' : 'nav'} onClick={() => setPage(id)}>
+              <span className="nav-index">0{index + 1}</span>{label}
+            </button>
+          ))}
+        </nav>
+        <div className="side-footer">
+          <button className={page === 'profile' ? 'nav on' : 'nav'} onClick={() => setPage('profile')}>
+            <span className="nav-index">ME</span>Profile
+          </button>
+          <button className="nav signout-nav" onClick={signOut}>
+            <span className="nav-index">↗</span>Sign out
+          </button>
+          <span className="side-caption">A calmer way to manage money.</span>
+        </div>
+      </aside>
+      <main className="main">
+        <header className="app-header">
+          <p className="app-eyebrow"><span /> PERSONAL FINANCES <i>/</i> {pageLabel(page).toUpperCase()}</p>
+          <div className="workspace-user">
+            <span className="user-avatar">{(token.user() || 'Y')[0].toUpperCase()}</span>
+            <span>{token.user() || 'Your account'}<small>Personal workspace</small></span>
+          </div>
+        </header>
+        <div className="page-content" key={page}>{views[page]}</div>
+      </main>
     </div>
   );
 }

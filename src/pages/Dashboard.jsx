@@ -73,7 +73,7 @@ export default function Dashboard({ go }) {
       <div className="cols">
         <section className="panel">
           <h2>Spending, last 14 days</h2>
-          <div className="chart"><ResponsiveContainer><BarChart data={m.days}><CartesianGrid vertical={false} stroke="#e3eaec" /><XAxis dataKey="name" tickLine={false} fontSize={12} /><YAxis tickLine={false} axisLine={false} fontSize={12} width={44} /><Tooltip formatter={(v) => baht(v)} labelFormatter={(l) => `Day ${l}`} cursor={{ fill: '#eef2f3' }} /><Bar dataKey="value" fill="#0f6b5c" radius={[3, 3, 0, 0]} /></BarChart></ResponsiveContainer></div>
+          <div className="chart"><ResponsiveContainer><BarChart data={m.days}><CartesianGrid vertical={false} stroke="#ded8d1" /><XAxis dataKey="name" tickLine={false} fontSize={12} /><YAxis tickLine={false} axisLine={false} fontSize={12} width={44} /><Tooltip formatter={(v) => baht(v)} labelFormatter={(l) => `Day ${l}`} cursor={{ fill: '#eee7de' }} /><Bar dataKey="value" fill="#bd7b3d" radius={[2, 2, 0, 0]} /></BarChart></ResponsiveContainer></div>
         </section>
         <section className="panel">
           <h2>By category</h2>

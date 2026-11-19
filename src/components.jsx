@@ -74,8 +74,8 @@ export const Meter = ({ used, total }) => {
 };
 export const Chart = ({ data, height = 240 }) => (
   <div className="chart" style={{ height }}><ResponsiveContainer><BarChart data={data}>
-    <CartesianGrid vertical={false} stroke="#e3eaec" /><XAxis dataKey="name" tickLine={false} fontSize={12} /><YAxis tickLine={false} axisLine={false} fontSize={12} width={48} />
-    <Tooltip formatter={(v) => baht(v)} cursor={{ fill: '#eef2f3' }} /><Bar dataKey="value" fill="#0f6b5c" radius={[3, 3, 0, 0]} />
+    <CartesianGrid vertical={false} stroke="#ded8d1" /><XAxis dataKey="name" tickLine={false} fontSize={12} /><YAxis tickLine={false} axisLine={false} fontSize={12} width={48} />
+    <Tooltip formatter={(v) => baht(v)} cursor={{ fill: '#eee7de' }} /><Bar dataKey="value" fill="#bd7b3d" radius={[2, 2, 0, 0]} />
   </BarChart></ResponsiveContainer></div>
 );
 

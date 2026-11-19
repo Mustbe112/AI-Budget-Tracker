@@ -18,7 +18,7 @@ function Overspending({ data }) {
   return (
     <>
       {alerts.map((a, i) => (
-        <div key={i} className="panel" style={{ borderLeft: '4px solid #a11', marginBottom: '.75rem' }}>
+        <div key={i} className="panel" style={{ borderLeft: '4px solid var(--portfolio-accent)', marginBottom: '.75rem' }}>
           <b className="neg">{a.message}</b>
         </div>
       ))}
