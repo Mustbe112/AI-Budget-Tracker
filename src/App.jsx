@@ -28,9 +28,9 @@ const INCOME = {
   fields: [
     { name: 'amount', label: 'Amount (฿)', type: 'number', required: true },
     { name: 'source', label: 'Source', required: true },
-    { name: 'date', label: 'Date', type: 'date', required: true },
+    { name: 'income_date', label: 'Date', type: 'date', required: true },
   ],
-  cols: ['date', 'source', 'amount'],
+  cols: ['income_date', 'source', 'amount'],
 };
 const BUDGET = {
   title: 'Budgets', path: '/budgets', showCheck: true,

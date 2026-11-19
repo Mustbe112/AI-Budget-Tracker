@@ -24,7 +24,7 @@ export default function Dashboard({ go }) {
     if (!x) return null;
     const now = today(), mo = monthOf(now);
     const expM = x.exp.filter((e) => monthOf(e.expense_date || '') === mo);
-    const incM = x.inc.filter((i) => monthOf(i.date || '') === mo);
+    const incM = x.inc.filter((i) => monthOf(i.income_date || '') === mo);
     const spent = sumBaht(expM), income = sumBaht(incM);
     // spending per category this month, biggest first
     const cat = {};
@@ -46,8 +46,8 @@ export default function Dashboard({ go }) {
   if (error) return <><h1>Overview</h1><Err msg={error} /></>;
   if (!m) return <><h1>Overview</h1><p className="muted">Loading your dashboard…</p></>;
 
-  const fcVal = x.fc && (pick(x.fc, ['next_day_forecast', 'forecast', 'estimated_daily_spending', 'next_day', 'moving_average']) ?? pick(rowsOf(x.fc).slice(-1)[0] || {}, ['forecast', 'value', 'amount']));
-  const anomalies = x.an ? rowsOf(x.an) : [];
+  const fcVal = x.fc?.forecast?.forecast_next_day ?? null;
+  const anomalyCount = num(x.an?.total_anomalies);
   const first = !x.exp.length && !x.inc.length && !x.bud.length;
   const monthName = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
@@ -98,10 +98,10 @@ export default function Dashboard({ go }) {
         </section>
       </div>
 
-      {(fcVal != null || anomalies.length > 0) && (
+      {(fcVal != null || anomalyCount > 0) && (
         <div className="cols">
           {fcVal != null && <section className="panel"><h2>Forecast</h2><p className="big">{baht(fcVal)}</p><p className="muted">Estimated spending for the next day, based on recent days. It is an estimate, not a guarantee.</p></section>}
-          {anomalies.length > 0 && <section className="panel"><h2>Unusual expenses</h2><p className="big">{anomalies.length}</p><p className="muted">flagged for review. Nothing is changed automatically.</p><button className="link left" onClick={() => go('analysis')}>Review them</button></section>}
+          {anomalyCount > 0 && <section className="panel"><h2>Unusual expenses</h2><p className="big">{anomalyCount}</p><p className="muted">flagged for review. Nothing is changed automatically.</p><button className="link left" onClick={() => go('analysis')}>Review them</button></section>}
         </div>
       )}
     </>
