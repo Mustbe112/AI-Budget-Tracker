@@ -7,6 +7,7 @@ const FIELDS = (cats) => [
   { name: 'expense_date', label: 'Date', type: 'date' },
   { name: 'amount', label: 'Total (฿)', type: 'number', required: true },
   { name: 'category', label: 'Category', options: cats, required: true },
+  { name: 'description', label: 'Description (optional)' },
 ];
 
 // Three steps: upload -> OCR extract -> user reviews -> confirm. Nothing is saved until step 3.
@@ -30,9 +31,19 @@ export default function Receipts({ categories, onSaved }) {
       const id = up.receipt_id ?? up.id; setReceiptId(id);
       step = 'Reading (POST /receipts/extract)';
       const ex = await api.receiptExtract({ receipt_id: id });
+      // Backend: { status, merchant, transaction_date, total_amount, ... } (a DRAFT: nothing is saved yet)
       const r = ex.data || ex;
-      setForm({ merchant: r.merchant ?? '', expense_date: r.date ?? r.expense_date ?? '', amount: r.total ?? r.amount ?? '', category: r.category ?? '' });
-      if (ex.warnings?.length || ex.confidence === 'low') setWarn('Some fields could not be read clearly. Please check them.');
+      setForm({
+        merchant: r.merchant ?? '',
+        expense_date: r.transaction_date ?? r.expense_date ?? r.date ?? '',
+        amount: r.total_amount ?? r.total ?? r.amount ?? '',
+        category: r.category ?? '',
+        description: '',
+      });
+      const issues = [r.message, ...(Array.isArray(r.warnings) ? r.warnings : [])].filter((x) => typeof x === 'string' && x);
+      const missing = !r.merchant || !(r.transaction_date ?? r.date) || !(r.total_amount ?? r.total);
+      if ((r.status && r.status !== 'ok') || missing || issues.length)
+        setWarn(issues.join(' ') || 'Some fields could not be read clearly. Please check and complete them before saving.');
     } catch (err) { setError(`${step} failed: ${err.message}. You can still add this expense manually.`); } finally { setBusy(false); }
   };
 
