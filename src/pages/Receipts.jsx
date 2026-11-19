@@ -24,14 +24,16 @@ export default function Receipts({ categories, onSaved }) {
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return setError('Use a JPG, PNG or WebP image.');
     if (file.size > 5 * 1024 * 1024) return setError('Image must be under 5 MB.');
     setBusy(true);
+    let step = 'Upload (POST /receipts/upload)';
     try {
       const up = await api.receiptUpload(file);
       const id = up.receipt_id ?? up.id; setReceiptId(id);
+      step = 'Reading (POST /receipts/extract)';
       const ex = await api.receiptExtract({ receipt_id: id });
       const r = ex.data || ex;
       setForm({ merchant: r.merchant ?? '', expense_date: r.date ?? r.expense_date ?? '', amount: r.total ?? r.amount ?? '', category: r.category ?? '' });
       if (ex.warnings?.length || ex.confidence === 'low') setWarn('Some fields could not be read clearly. Please check them.');
-    } catch (err) { setError(err.message + ' You can still add this expense manually.'); } finally { setBusy(false); }
+    } catch (err) { setError(`${step} failed: ${err.message}. You can still add this expense manually.`); } finally { setBusy(false); }
   };
 
   const confirm = async (e) => {
